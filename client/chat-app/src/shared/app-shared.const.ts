@@ -22,3 +22,8 @@ export const AvatarList: Avatar_t[] = [
   {id : 18, alt: "zaika", link: "/assets/avatar/zaika.png"},
   {id : 19, alt: "zawa", link: "/assets/avatar/zawa.png"},
 ]
+
+export const SESSIONKEYS = {
+  username: "username",
+  selectedAvatarId: "selectedAvatarId",
+}

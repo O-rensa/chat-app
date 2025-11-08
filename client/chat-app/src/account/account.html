@@ -11,8 +11,9 @@
         </div>
         <div class="flex flex-wrap items-center gap-2 p-2">
             <label for="username" class="text-xl">USERNAME: </label>
-            <input pInputText id="username" name="username" type="text" maxlength="16"/>
+            <input pInputText id="username" name="username" type="text" maxlength="16" [(ngModel)]="username" />
         </div>
-        <p-button label="Enter" variant="outlined" severity="secondary" icon="fa-solid fa-right-to-bracket"/>
+        <p-button label="Enter" variant="outlined" severity="secondary" icon="fa-solid fa-right-to-bracket" 
+            [disabled]="username.trim().length == 0 || disableEnterButton" (onClick)="enter()"/>
     </div>
 </div>
