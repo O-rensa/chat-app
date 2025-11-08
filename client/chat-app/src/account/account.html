@@ -1,9 +1,18 @@
 <div class="w-full h-screen flex justify-center items-center">
-    <div class="flex flex-col justify-center items-center gap-2">
-        <img src="/assets/img/logo.jpg" alt="logo" width="425em"/>
-        <div class="flex flex-wrap items-center gap-2">
+    <div class="flex flex-col justify-center items-center gap-3">
+        <div class="grid grid-cols-4 gap-1 p-2">
+            @for (item of avatarList; track $index) {
+                <div class="cursor-pointer border hover:border-black border-2"
+                    [ngClass]="selectedAvatarId == item.id ? 'border-green-500' : 'border-transparent'">
+                    <img [src]="item.link" alt="item.alt" [ngClass]="selectedAvatarId == item.id ? 'opacity-100' : 'opacity-50'"
+                        (click)="selectedAvatarId = item.id">
+                </div>
+            }
+        </div>
+        <div class="flex flex-wrap items-center gap-2 p-2">
             <label for="username" class="text-xl">USERNAME: </label>
             <input pInputText id="username" name="username" type="text" maxlength="16"/>
         </div>
+        <p-button label="Enter" variant="outlined" severity="secondary" icon="fa-solid fa-right-to-bracket"/>
     </div>
 </div>
