@@ -6,7 +6,7 @@ import { AccountService } from '../shared/service/account.service';
 
 @Component({
   selector: 'app-account',
-  imports: [...ACCOUNTMODULEIMPORTS],
+  imports: [...ACCOUNTMODULEIMPORTS,],
   templateUrl: './account.html',
   styleUrl: './account.scss',
 })

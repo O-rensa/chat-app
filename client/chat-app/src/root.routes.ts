@@ -21,7 +21,7 @@ export const ROOTROUTES: Routes = [
     pathMatch: "full",
   },
   {
-    path: "*",
+    path: "**",
     redirectTo: "main",
     pathMatch: "full",
   }
