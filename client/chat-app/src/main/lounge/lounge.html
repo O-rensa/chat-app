@@ -1,1 +1,12 @@
-<p>lounge works!</p>
+<div class="w-full flex flex-wrap justify-center items-center p-3 gap-3">
+    <div class="w-full max-w-xl flex flex-wrap items-center justify-between p-3 bg-gray-500 rounded-md">
+        <div class="h-full flex flex-wrap items-center justify-between">
+            <img [src]="selectedAvatar" [alt]="selectedAvatarAlt" class="border border-2 border-white"/>
+            <span class="text-xl font-bold px-3 text-white">{{username}}</span>
+        </div>
+        <p-button label="LOGOUT" severity="secondary" icon="fa-solid fa-person-hiking"
+            [loading]="btnLoading" (onClick)="logout()"/>
+    </div>
+</div>
+<div>
+</div>

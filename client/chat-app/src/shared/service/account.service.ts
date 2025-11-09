@@ -18,4 +18,12 @@ export class AccountService {
     const mainUrl: UrlTree = this.router.createUrlTree(["/main"]);
     this.router.navigateByUrl(mainUrl);
   }
+
+  logout(): void {
+    sessionStorage.removeItem(SESSIONKEYS.username);
+    sessionStorage.removeItem(SESSIONKEYS.selectedAvatarId);
+
+    const accountUrl: UrlTree = this.router.createUrlTree(["/account"]);
+    this.router.navigateByUrl(accountUrl);
+  }
 }
