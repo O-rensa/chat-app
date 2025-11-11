@@ -2,7 +2,9 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
+	"strconv"
 	"sync"
 
 	"github.com/gofiber/contrib/websocket"
@@ -84,6 +86,10 @@ func main() {
 func webSocketIntance(c *websocket.Conn) {
 	defer func() {
 		roomMux.Lock()
+		msg := websocket.FormatCloseMessage(1000, "normal closure")
+		if err := c.WriteMessage(websocket.CloseMessage, msg); err != nil {
+			fmt.Println("Error sending close message:", err)
+		}
 		for _, room := range rooms {
 			delete(room.Clients, c)
 		}
@@ -126,7 +132,25 @@ func handleJoin(c *websocket.Conn, m Message_t) {
 	}
 
 	room.Clients[c] = true
-	c.WriteMessage(1, []byte("Joined room: "+room.Name))
+	c.WriteJSON(map[string]string{
+		"action":   "join",
+		"message":  "Joined room",
+		"roomId":   room.ID,
+		"roomName": room.Name,
+	})
+
+	for client := range room.Clients {
+		if client != c {
+			client.WriteJSON(map[string]string{
+				"action":   "join",
+				"text":     "A new user joined",
+				"roomId":   room.ID,
+				"roomName": room.Name,
+				"username": m.Username,
+				"avatarId": strconv.Itoa(m.AvatarId),
+			})
+		}
+	}
 	log.Printf("Client joined room: %s (%s)", room.Name, m.RoomId)
 }
 
@@ -140,7 +164,14 @@ func handleMessage(m Message_t) {
 	}
 
 	for client := range room.Clients {
-		if err := client.WriteMessage(1, []byte(m.Text)); err != nil {
+		if err := client.WriteJSON(map[string]string{
+			"action":   m.Action,
+			"text":     m.Text,
+			"roomId":   m.RoomId,
+			"roomName": m.RoomName,
+			"username": m.Username,
+			"avatarId": strconv.Itoa(m.AvatarId),
+		}); err != nil {
 			log.Println("write error: ", err)
 			client.Close()
 
