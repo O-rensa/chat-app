@@ -1,1 +1,40 @@
-<p>room works!</p>
+<div class="w-full flex flex-col gap-1 bg-gray-100 items-center justify-center">
+    <div class="flex flex-wrap gap-3 p-2">
+        <div class="flex flex-col gap-1 items-center justify-start p-3">
+            <img [src]="selectedAvatar!" [alt]="selectedAvatarAlt!">
+            <span>{{username}}</span>
+        </div>
+        <div class="flex flex-col items-center justify-center gap-2">
+            <textarea pTextarea cols="50" maxlength="100" rows="3" style="resize: none;"
+                [(ngModel)]="message"></textarea>
+            <p-button label="POST" severity="contrast" variant="outlined" styleClass="w-40"
+                [loading]="btnLoading" size="small" (onClick)="post()"/>
+        </div>
+        <p-button label="LEAVE" severity="warn" [loading]="btnLoading" size="small" (onClick)="leave()"/>
+    </div>
+</div>
+<div class="w-full flex flex-wrap justify-center p-3">
+    <div class="w-150 flex flex-col gap-2">
+        @for (msg of broadcastedMessages; track $index) {
+            <div class="grid grid-cols-12 border-b">
+                <div class="col-span-3 flex flex-col justify-center items-center">
+                    @if (msg.action != "join" && msg.action != "leave") {
+                        <img [src]="getAvatarLink(msg.avatarId)">
+                        <span>{{msg.username}}</span>
+                    }
+                </div>
+                <div class="col-span-9 flex flex-wrap items-center">
+                    @if (msg.action != "join" && msg.action != "leave") {
+                        {{msg.text}}
+                    } 
+                    @if (msg.action == "join") {
+                        <span>{{msg.username}} has joined the chat.</span>
+                    }
+                    @if (msg.action == "leave") {
+                        <span>{{msg.username}} has left the chat.</span>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</div>

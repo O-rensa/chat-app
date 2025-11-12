@@ -1,4 +1,5 @@
 import { Routes } from "@angular/router";
+import { MainGuard } from "../shared/guard/main.guard";
 
 export const MAINROUTES: Routes = [
   {
@@ -16,6 +17,7 @@ export const MAINROUTES: Routes = [
       },
       {
         path: "room",
+        canActivate: [MainGuard],
         loadComponent: () => import("./room/room").then(c => c.Room),
       }
     ]

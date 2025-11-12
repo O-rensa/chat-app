@@ -1,12 +1,36 @@
-<div class="w-full flex flex-wrap justify-center items-center p-3 gap-3">
+<div class="w-full flex flex-col justify-center items-center p-3 gap-3">
     <div class="w-full max-w-xl flex flex-wrap items-center justify-between p-3 bg-gray-500 rounded-md">
         <div class="h-full flex flex-wrap items-center justify-between">
             <img [src]="selectedAvatar" [alt]="selectedAvatarAlt" class="border border-2 border-white"/>
             <span class="text-xl font-bold px-3 text-white">{{username}}</span>
         </div>
-        <p-button label="LOGOUT" severity="secondary" icon="fa-solid fa-person-hiking"
-            [loading]="btnLoading" (onClick)="logout()"/>
+        <div class="flex flex-wrap gap-2 items-center justify-end gap-2">
+            <p-button label="REFRESH ROOM LIST" severity="secondary" icon="fa-solid fa-rotate-right"
+                [loading]="btnLoading" (onClick)="getRoomList()"/>
+            <p-button label="LOGOUT" severity="secondary" icon="fa-solid fa-person-hiking"
+                (onClick)="logout()"/>
+        </div>
     </div>
-</div>
-<div>
+
+    <div class="w-full max-w-xl flex flex-col gap-3 border border-gray-500 rounded-md">
+        <div class="p-3 flex items-center justify-between">
+            <div class="flex flex-wrap gap-3">
+            <p-floatlabel variant="in">
+                <input pInputText id="in_label" [(ngModel)]="roomName" autocomplete="off" />
+                <label for="in_label">Room Name</label>
+            </p-floatlabel>
+            </div>
+            <p-button label="CREATE ROOM" severity="secondary" icon="fa-solid fa-plus"
+                [loading]="btnLoading" (onClick)="createRoom()"/>
+        </div>
+        <div class="p-3 flex flex-col">
+            @for (room of rooms; track $index) {
+                <div class="p-2 flex flex-wrap items-center justify-between border-b border-gray-500">
+                    <span>{{room.name}}</span>
+                    <p-button label="JOIN" severity="secondary" icon="fa-solid fa-door-open"
+                        [loading]="btnLoading" size="small" (onClick)="joinRoom(room.id, room.name)"/>
+                </div>
+            }
+        </div>
+    </div>
 </div>

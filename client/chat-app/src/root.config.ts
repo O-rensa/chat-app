@@ -3,6 +3,7 @@ import { provideRouter } from '@angular/router';
 import { ROOTROUTES } from './root.routes';
 import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeuix/themes/aura'; 
+import { provideHttpClient } from '@angular/common/http';
 
 export const ROOTCONFIG: ApplicationConfig = {
   providers: [
@@ -16,6 +17,7 @@ export const ROOTCONFIG: ApplicationConfig = {
           darkModeSelector: false,
         }
       }
-    })
+    }),
+    provideHttpClient(),
   ]
 };

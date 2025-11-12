@@ -22,8 +22,8 @@ export class MainService {
     return this.httpClient.post<{message: string, roomId: string}>(`${this.baseUrl}/rooms`, request);
   }
 
-  getRoomList(): Observable<{id: string, name: string}> {
-    return this.httpClient.get<{id: string, name: string}>(`${this.baseUrl}/rooms`);
+  getRoomList(): Observable<{id: string, name: string}[]> {
+    return this.httpClient.get<{id: string, name: string}[]>(`${this.baseUrl}/rooms`);
   }
 
   connectWebSocket(): void {
@@ -32,7 +32,10 @@ export class MainService {
     this.ws.onerror = (err) => console.error("WebSocket error:", err);
 
     this.ws.onclose = (event) =>  {
-
+      if (event.code == 1000) {
+        console.log("attempting to reconnect");
+        this.connectWebSocket()
+      }
     }
 
     this.ws.onmessage = (event) => {
@@ -59,18 +62,17 @@ export class MainService {
       username: username,
       avatarId: avatarId,
     }
-
     this.ws.send(JSON.stringify(request));
   }
 
-  sengMessage(roomId: string, text: string, username: string, avatarId: number): void {
+  sendMessage(roomId: string, text: string, username: string, avatarId: number): void {
     if (!this.ws || this.ws.readyState != WebSocket.OPEN) {
       console.warn("WebSocket not connected yet");
       return;
     }
 
     const request: Message_t = {
-      action: "join",
+      action: "message",
       roomId: roomId,
       roomName: "",
       text: text,
@@ -81,11 +83,29 @@ export class MainService {
     this.ws.send(JSON.stringify(request));
   }
 
+  leaveRoom(roomId: string, username: string): void {
+    if (!this.ws || this.ws.readyState != WebSocket.OPEN) {
+      console.warn("WebSocket not connected yet");
+      return;
+    }
+
+    const request: Message_t = {
+      action: "leave",
+      roomId: roomId,
+      roomName: "",
+      text: "",
+      username: username,
+      avatarId: 0,
+    }
+
+    this.ws.send(JSON.stringify(request));
+  }
+
   onMessage(): Observable<Message_t> {
     return this.messageSubject.asObservable();
   }
 
-  logOut(): void {
+  disconnectWebSocket(): void {
     this.ws.close(1001);
   }
 }

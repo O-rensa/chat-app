@@ -26,4 +26,5 @@ export const AvatarList: Avatar_t[] = [
 export const SESSIONKEYS = {
   username: "username",
   selectedAvatarId: "selectedAvatarId",
+  roomId: "roomId",
 }

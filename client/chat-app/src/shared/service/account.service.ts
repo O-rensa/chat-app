@@ -22,6 +22,7 @@ export class AccountService {
   logout(): void {
     sessionStorage.removeItem(SESSIONKEYS.username);
     sessionStorage.removeItem(SESSIONKEYS.selectedAvatarId);
+    sessionStorage.removeItem(SESSIONKEYS.roomId);
 
     const accountUrl: UrlTree = this.router.createUrlTree(["/account"]);
     this.router.navigateByUrl(accountUrl);

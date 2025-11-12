@@ -34,4 +34,8 @@ export class AppBaseComponent {
     }
     return null;
   }
+
+  get roomId(): string | null {
+    return this.sessionService.roomId;
+  }
 }

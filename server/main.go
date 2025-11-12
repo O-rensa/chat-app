@@ -9,6 +9,7 @@ import (
 
 	"github.com/gofiber/contrib/websocket"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 )
 
 var (
@@ -18,6 +19,11 @@ var (
 
 func main() {
 	app := fiber.New()
+	app.Use(cors.New(cors.Config{
+		AllowOrigins: "*",
+		AllowHeaders: "*",
+		AllowMethods: "*",
+	}))
 
 	app.Post("/rooms", func(c *fiber.Ctx) error {
 		var req struct {
@@ -114,6 +120,8 @@ func webSocketIntance(c *websocket.Conn) {
 			handleJoin(c, m)
 		case "message":
 			handleMessage(m)
+		case "leave":
+			handleLeave(c, m)
 		default:
 			c.WriteMessage(1, []byte("unknown action"))
 		}
@@ -179,5 +187,39 @@ func handleMessage(m Message_t) {
 			delete(room.Clients, client)
 			roomMux.Unlock()
 		}
+	}
+}
+
+func handleLeave(c *websocket.Conn, m Message_t) {
+	roomMux.RLock()
+	room, ok := rooms[m.RoomId]
+	roomMux.RUnlock()
+
+	if !ok {
+		return
+	}
+
+	for client := range room.Clients {
+		if err := client.WriteJSON(map[string]string{
+			"action":   m.Action,
+			"text":     "User left the room.",
+			"roomId":   m.RoomId,
+			"roomName": m.RoomName,
+			"username": m.Username,
+			"avatarId": strconv.Itoa(m.AvatarId),
+		}); err != nil {
+			log.Println("write error: ", err)
+			client.Close()
+
+			roomMux.Lock()
+			delete(room.Clients, client)
+			roomMux.Unlock()
+		}
+	}
+
+	delete(room.Clients, c)
+
+	if len(room.Clients) == 0 {
+		delete(rooms, m.RoomId)
 	}
 }

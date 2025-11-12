@@ -13,4 +13,8 @@ export class SessionService {
   get selectedAvatarId(): string | null {
     return sessionStorage.getItem(SESSIONKEYS.selectedAvatarId);
   }
+
+  get roomId(): string | null {
+    return sessionStorage.getItem(SESSIONKEYS.roomId);
+  }
 }
