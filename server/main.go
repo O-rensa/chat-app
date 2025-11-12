@@ -107,6 +107,7 @@ func webSocketIntance(c *websocket.Conn) {
 		_, msg, err := c.ReadMessage()
 		if err != nil {
 			log.Println("read error:", err)
+			break
 		}
 
 		var m Message_t

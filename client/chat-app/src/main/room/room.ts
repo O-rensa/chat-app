@@ -26,7 +26,6 @@ export class Room extends AppBaseComponent implements OnInit {
   ngOnInit(): void {
     this.mainService.onMessage()
       .subscribe((res) => {
-        console.log(res);
         this.broadcastedMessages.unshift(res);
       });
   }
